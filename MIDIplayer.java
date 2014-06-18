@@ -1,7 +1,3 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import javax.sound.midi.*;
 
 public class MIDIplayer 
@@ -15,6 +11,7 @@ public class MIDIplayer
     private MidiEvent[][] notesON = new MidiEvent[16][16];
     private MidiEvent[][] notesOFF = new MidiEvent[16][16];
     private static int[] instruments  = {35,38,39,40,46,51,56,60,61,62,63,67,69,70,73,75};
+    private int currentInstrument = 0;
     
     MIDIplayer()
     {
@@ -90,6 +87,22 @@ public class MIDIplayer
         player.setTempoFactor((float)(tempoFactor * 1.03));
     }
     
+    public int getTick()
+    {
+    	return (int)player.getTickPosition();
+    }
+    
+    public int getInstrument() {
+    	return currentInstrument;
+    }
+    
+    public boolean hasEvent(int tick) {
+    	if(track.get(tick) != null) {
+    		return true;
+    	}
+    	return false;
+    }
+    
     
     private void fillNotes()
     {
@@ -122,7 +135,7 @@ public class MIDIplayer
         try
         {
             player.setSequence(seq);
-            player.setLoopCount(player.LOOP_CONTINUOUSLY);
+            player.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
             player.setLoopStartPoint(0);
             player.setTempoInBPM(120);
         }
@@ -161,5 +174,65 @@ public class MIDIplayer
             e.printStackTrace();
         }
         return event;
-    }	 
+    }	
+    
+    /*
+    private int convert(int num){
+    	int old_val = num;
+    	int old_min = 0;
+    	int old_max = 255;
+    	int new_max = 120;
+    	int new_min = 10;
+    	return (((old_val - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min);
+    }
+    */
+    
+    public void processMyoEvent(MyoEvent me){
+    	System.out.println(me.type);
+    	System.out.println(me.command);
+    	if(me.type.contains("control")) {
+    		if(me.command.contains("allOff")) {
+    			System.out.println("All off received");
+    			reset();
+    			/*
+    			while(track.size() > 0)
+    			{
+    				for(int i = 0; i < track.size(); i++) {
+    					track.remove(track.get(i));
+    				}
+    			}
+    			for(int i = 0; i < 16; i ++)
+    	        {
+    	            for(int j = 0; j < 16; j ++)
+    	            {
+    	                track.add(makeEvent(noteOff, 9, instruments[i], 100, j));
+    	            }
+    	        }
+    	        */
+    		}
+    		else if(me.command.contains("channelDown")) {
+    			currentInstrument -= 1;
+    			if(currentInstrument == -1) {
+    				currentInstrument = 15;
+    			}
+    			System.out.println("currentInstrument = " + currentInstrument);
+    		}
+    		else if(me.command.contains("channelUp")) {
+    			currentInstrument += 1;
+    			if(currentInstrument == 16) {
+    				currentInstrument = 0;
+    			}
+    		}
+    		System.out.println("currentInstrument = " + currentInstrument);
+    	}
+    	else if (me.type.contains("diff")){
+    		System.out.println("currentInstrument = " + currentInstrument);
+    		int tick = getTick();
+    		setNote(currentInstrument, tick);
+    	}
+    	else {
+    		// do nothing
+    	}
+    	
+    }
 }

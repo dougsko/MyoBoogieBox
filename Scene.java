@@ -1,18 +1,21 @@
 import javax.swing.*;
+
 import java.awt.*;
-import java.awt.Color;
 import java.awt.event.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import javax.sound.midi.*;
 
 public class Scene
 {
     private int beatCount = 0;
     private MIDIplayer mplayer;
-    private static int events[] = {127};
+    //private MyoMidiPlayer mplayer;
+    //private static int events[] = {127};
     private JFrame frame;
     private JPanel mainPanel;
-    private JLabel bg;
+    //private JLabel bg;
     
     private static String iconPath = "icons/";
     private static Icon selectIcon = new ImageIcon( iconPath + "select.png");
@@ -32,7 +35,7 @@ public class Scene
     private BBRadioButton[][] radioBoxList;
     private JButton start;
     private JButton stop;
-    private JButton pause;
+    //private JButton pause;
     private JButton upTempo;
     private JButton downTempo;
     private Box buttonBox; 
@@ -45,9 +48,27 @@ public class Scene
     
     private void run()
     {
+    	// set up server
+    	int portNumber = 6969;
+        boolean listening = true;
         mplayer = new MIDIplayer();
         mplayer.addListener(new MIDIBeatListener());
+        
         buildGui();
+        
+        try {
+        	
+        	ServerSocket serverSocket = new ServerSocket(portNumber);
+            while (listening) {
+                new MyoMidiServerThread(serverSocket.accept(), mplayer).start();
+            }
+            
+            serverSocket.close();
+            
+        } catch (IOException e) {
+            System.err.println("Could not listen on port " + portNumber);
+            System.exit(-1);
+        }
     }
     
     private void buildGui ()
@@ -139,8 +160,7 @@ public class Scene
     {
         for(int rows = 0; rows < 16; rows ++)
         {
-            changeIcons(radioBoxList[rows][cols], beatSelectIcon, beatUnselectIcon);
-            
+            changeIcons(radioBoxList[rows][cols], beatSelectIcon, beatUnselectIcon);            
             if(cols != 0 )
             {
                 changeIcons(radioBoxList[rows][cols-1], selectIcon, unselectIcon);
