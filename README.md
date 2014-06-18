@@ -5,6 +5,3 @@ Originally forked from https://github.com/vytis/BoogieBox, this application is a
 
 It works in conjunction with https://github.com/thalmic-alpha/MyoMidiClient
 
-to launch it type:
-    javac *.java && java scene <listening port>
-
