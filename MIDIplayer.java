@@ -1,4 +1,7 @@
 import javax.sound.midi.*;
+//import javax.swing.BorderFactory;
+
+//import Scene.RadioButtonListener;
 
 public class MIDIplayer 
 {
@@ -12,9 +15,11 @@ public class MIDIplayer
     private MidiEvent[][] notesOFF = new MidiEvent[16][16];
     private static int[] instruments  = {35,38,39,40,46,51,56,60,61,62,63,67,69,70,73,75};
     private int currentInstrument = 0;
+    private BBRadioButton[][] seqButtons;
     
-    MIDIplayer()
+    MIDIplayer(BBRadioButton[][] radioButtons)
     {
+    	seqButtons = radioButtons;
         setupMidi();
         buildTrack();
     }
@@ -73,6 +78,11 @@ public class MIDIplayer
     public void reset()
     {
         buildTrack();
+        for(int rows = 0; rows < 16; rows ++) {
+            for(int cols = 0; cols < 16; cols ++) {
+                seqButtons[rows][cols].setSelected(false);
+            }
+        }
     }
     
     public void downTempo()
@@ -226,9 +236,15 @@ public class MIDIplayer
     		System.out.println("currentInstrument = " + currentInstrument);
     	}
     	else if (me.type.contains("diff")){
-    		System.out.println("currentInstrument = " + currentInstrument);
+    		//System.out.println("currentInstrument = " + currentInstrument);
     		int tick = getTick();
     		setNote(currentInstrument, tick);
+    		if(seqButtons[currentInstrument][tick].isSelected() == true) {
+    			seqButtons[currentInstrument][tick].setSelected(false);
+    		}
+    		else {
+    			seqButtons[currentInstrument][tick].setSelected(true);
+    		}
     	}
     	else {
     		// do nothing

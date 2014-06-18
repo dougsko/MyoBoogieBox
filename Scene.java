@@ -48,13 +48,14 @@ public class Scene
     
     private void run()
     {
+    	buildGui();
     	// set up server
     	int portNumber = 6969;
         boolean listening = true;
-        mplayer = new MIDIplayer();
+        mplayer = new MIDIplayer(radioBoxList);
         mplayer.addListener(new MIDIBeatListener());
         
-        buildGui();
+        //buildGui();
         
         try {
         	
@@ -73,7 +74,7 @@ public class Scene
     
     private void buildGui ()
     {
-        frame = new JFrame("Boogie Box");
+        frame = new JFrame("Myo Boogie Box");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setBounds(50, 50, 300, 300);
