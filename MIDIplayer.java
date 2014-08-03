@@ -198,44 +198,40 @@ public class MIDIplayer
     */
     
     public void processMyoEvent(MyoEvent me){
-    	System.out.println(me.type);
-    	System.out.println(me.command);
-    	if(me.type.contains("control")) {
-    		if(me.command.contains("allOff")) {
-    			System.out.println("All off received");
-    			reset();
-    			/*
-    			while(track.size() > 0)
-    			{
-    				for(int i = 0; i < track.size(); i++) {
-    					track.remove(track.get(i));
-    				}
+    	System.out.println(me.frame.pose);
+    	if(me.frame.pose.contains("fingersSpread")) {
+    		System.out.println("All off received");
+    		reset();
+    		/*
+    		while(track.size() > 0)
+    		{
+    			for(int i = 0; i < track.size(); i++) {
+    				track.remove(track.get(i));
     			}
-    			for(int i = 0; i < 16; i ++)
+    		}
+    		for(int i = 0; i < 16; i ++)
+    	    {
+    	        for(int j = 0; j < 16; j ++)
     	        {
-    	            for(int j = 0; j < 16; j ++)
-    	            {
-    	                track.add(makeEvent(noteOff, 9, instruments[i], 100, j));
-    	            }
-    	        }
-    	        */
-    		}
-    		else if(me.command.contains("channelDown")) {
-    			currentInstrument -= 1;
-    			if(currentInstrument == -1) {
-    				currentInstrument = 15;
-    			}
-    			System.out.println("currentInstrument = " + currentInstrument);
-    		}
-    		else if(me.command.contains("channelUp")) {
-    			currentInstrument += 1;
-    			if(currentInstrument == 16) {
-    				currentInstrument = 0;
-    			}
+    	            track.add(makeEvent(noteOff, 9, instruments[i], 100, j));
+    	         }
+    	    }
+    	    */
+    	}
+    	else if(me.frame.pose.contains("waveIn")) {
+    		currentInstrument -= 1;
+    		if(currentInstrument == -1) {
+    			currentInstrument = 15;
     		}
     		System.out.println("currentInstrument = " + currentInstrument);
     	}
-    	else if (me.type.contains("diff")){
+    	else if(me.frame.pose.contains("waveOut")) {
+    		currentInstrument += 1;
+    		if(currentInstrument == 16) {
+    			currentInstrument = 0;
+    		}
+    	}
+    	else if(me.frame.pose.contains("fist")){
     		//System.out.println("currentInstrument = " + currentInstrument);
     		int tick = getTick();
     		setNote(currentInstrument, tick);
@@ -249,6 +245,6 @@ public class MIDIplayer
     	else {
     		// do nothing
     	}
-    	
+    	//System.out.println("currentInstrument = " + currentInstrument);
     }
 }

@@ -1,13 +1,14 @@
 require 'socket'      # Sockets are in standard library
 
-hostname = 'localhost'
+hostname = '10.172.2.145'
 port = 6969
 
 @s = TCPSocket.open(hostname, port)
 
 def send(cmd)
     if cmd.match(/1/)
-        @s.puts "{\"type\":\"diff\",\"x\":" + rand(255).to_s + ", \"y\":" + rand(255).to_s + ", \"z\":" + rand(255).to_s + "}"
+        #@s.puts "{\"type\":\"diff\",\"x\":" + rand(255).to_s + ", \"y\":" + rand(255).to_s + ", \"z\":" + rand(255).to_s + "}"
+        @s.puts "{\"pose\":\"fist\",\"orientData\":[\"1\",\"2\",\"3\"],\"accelData\":[\"1\",\"2\",\"3\"],\"diffData\":[\"1\",\"2\",\"3\"],\"worldData\":[\"1\",\"2\",\"3\"],\"gyroData\":[\"1\",\"2\",\"3\"],\"timeStamp\":[\"#{Time.now.to_i}\"]}"
     elsif cmd.match(/2/)
         @s.puts "{\"type\":\"control\",\"command\":\"allOff\"}"
 	elsif cmd.match(/3/)

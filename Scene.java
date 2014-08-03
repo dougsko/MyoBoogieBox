@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.sound.midi.*;
+
+import org.java_websocket.drafts.Draft;
 
 public class Scene
 {
@@ -55,8 +59,15 @@ public class Scene
         mplayer = new MIDIplayer(radioBoxList);
         mplayer.addListener(new MIDIBeatListener());
         
+        try {
+			MyoWsClient c = new MyoWsClient( new URI( "ws://myo-ws-server.herokuapp.com" ), mplayer);
+			c.connect();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         //buildGui();
-        
+        /*
         try {
         	
         	ServerSocket serverSocket = new ServerSocket(portNumber);
@@ -70,6 +81,7 @@ public class Scene
             System.err.println("Could not listen on port " + portNumber);
             System.exit(-1);
         }
+        */
     }
     
     private void buildGui ()

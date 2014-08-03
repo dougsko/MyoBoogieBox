@@ -4,8 +4,10 @@ import java.io.*;
 import javax.sound.midi.ControllerEventListener;
 import javax.sound.midi.ShortMessage;
 
+
 import com.google.gson.Gson;
- 
+
+
 public class MyoMidiServerThread extends Thread {
     private Socket socket = null;
     private int beatCount = 0;
@@ -21,10 +23,19 @@ public class MyoMidiServerThread extends Thread {
         mplayer = mplayer2;
         //mplayer.addListener(new MIDIBeatListener());
         //mplayer.start();
+        
     }
      
     public void run() {
- 
+    	try {
+        	MyoWsClient c = new MyoWsClient( new URI( "ws://myo-ws-server.herokuapp.com" ), mplayer);
+        	c.connect();
+        	System.out.println(c);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	/*
         try {
             //PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
@@ -47,6 +58,7 @@ public class MyoMidiServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
         mplayer.stop();
     }
     
