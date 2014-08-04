@@ -198,7 +198,7 @@ public class MIDIplayer
     */
     
     public void processMyoEvent(MyoEvent me){
-    	System.out.println(me.frame.pose);
+    	//System.out.println(me.frame.pose);
     	if(me.frame.pose.contains("fingersSpread")) {
     		System.out.println("All off received");
     		reset();
@@ -209,6 +209,7 @@ public class MIDIplayer
     				track.remove(track.get(i));
     			}
     		}
+    		
     		for(int i = 0; i < 16; i ++)
     	    {
     	        for(int j = 0; j < 16; j ++)
@@ -216,7 +217,7 @@ public class MIDIplayer
     	            track.add(makeEvent(noteOff, 9, instruments[i], 100, j));
     	         }
     	    }
-    	    */
+    	    */   	    
     	}
     	else if(me.frame.pose.contains("waveIn")) {
     		currentInstrument -= 1;
@@ -230,6 +231,7 @@ public class MIDIplayer
     		if(currentInstrument == 16) {
     			currentInstrument = 0;
     		}
+    		System.out.println("currentInstrument = " + currentInstrument);
     	}
     	else if(me.frame.pose.contains("fist")){
     		//System.out.println("currentInstrument = " + currentInstrument);

@@ -20,6 +20,7 @@ public class Scene
     private JFrame frame;
     private JPanel mainPanel;
     //private JLabel bg;
+    private static String wshost = "myo-ws-server.herokuapp.com";
     
     private static String iconPath = "icons/";
     private static Icon selectIcon = new ImageIcon( iconPath + "select.png");
@@ -44,10 +45,16 @@ public class Scene
     private JButton downTempo;
     private Box buttonBox; 
     
+    		
+    
     public static void main(String[] args)
     {
+    	if(args.length > 0) {
+    		wshost = args[1];
+    	}
         Scene program = new Scene();
         program.run();
+    	
     }
     
     private void run()
@@ -60,7 +67,7 @@ public class Scene
         mplayer.addListener(new MIDIBeatListener());
         
         try {
-			MyoWsClient c = new MyoWsClient( new URI( "ws://myo-ws-server.herokuapp.com" ), mplayer);
+			MyoWsClient c = new MyoWsClient( new URI( "ws://" + wshost ), mplayer);
 			c.connect();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
