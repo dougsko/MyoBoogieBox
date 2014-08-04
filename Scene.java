@@ -50,7 +50,7 @@ public class Scene
     public static void main(String[] args)
     {
     	if(args.length > 0) {
-    		wshost = args[1];
+    		wshost = args[0];
     	}
         Scene program = new Scene();
         program.run();
